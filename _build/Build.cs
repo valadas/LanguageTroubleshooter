@@ -13,13 +13,9 @@ using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
-using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.MSBuild;
-using Nuke.Common.Tools.ReportGenerator;
-using Nuke.Common.Tools.VSTest;
-using Nuke.Common.Tools.Xunit;
 using Nuke.Common.Utilities.Collections;
 using Octokit;
 using static Nuke.Common.EnvironmentInfo;
@@ -55,7 +51,6 @@ class Build : NukeBuild
 
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
     AbsolutePath WebProjectDirectory => RootDirectory / "Module.Web";
-    AbsolutePath TestResultsDirectory => RootDirectory / "TestResults";
 
     private string devViewsPath = "http://localhost:3333/build/";
     private string prodViewsPath = "DesktopModules/MyModule/resources/scripts/era-mymodule/";
@@ -94,7 +89,6 @@ class Build : NukeBuild
         .Executes(() =>
         {
             EnsureCleanDirectory(ArtifactsDirectory);
-            EnsureCleanDirectory(TestResultsDirectory);
         });
 
     Target Restore => _ => _
@@ -102,38 +96,6 @@ class Build : NukeBuild
         {
             DotNetRestore(s => s
                 .SetProjectFile(Solution.GetProject("Module")));
-
-            DotNetRestore(s => s
-                .SetProjectFile(Solution.GetProject("UnitTests")));
-        });
-
-    Target Test => _ => _
-        .DependsOn(Compile)
-        .Executes(() =>
-        {
-            MSBuild(_ => _
-                .SetConfiguration(Configuration)
-                .SetProjectFile(Solution.GetProject("UnitTests"))
-                .SetTargets("Build")
-                .ResetVerbosity());
-
-            DotNetTest(_ => _
-                .SetConfiguration(Configuration)
-                .ResetVerbosity()
-                .SetResultsDirectory(TestResultsDirectory)
-                .EnableCollectCoverage()
-                .SetCoverletOutputFormat(CoverletOutputFormat.cobertura)
-                .SetLogger($"trx;LogFileName=UnitTests.trx")
-                .SetCoverletOutput(TestResultsDirectory / "UnitTests.xml")
-                .SetProjectFile(RootDirectory / "UnitTests" / "UnitTests.csproj")
-                .SetNoBuild(true));
-
-            ReportGenerator(_ => _
-                .SetReports(TestResultsDirectory / "*.xml")
-                .SetReportTypes(ReportTypes.Badges, ReportTypes.HtmlInline)
-                .SetTargetDirectory(TestResultsDirectory)
-                .SetFramework("netcoreapp2.1")
-            );
         });
 
     Target Compile => _ => _
@@ -219,9 +181,9 @@ class Build : NukeBuild
         .DependsOn(BuildFrontEnd)
         .Executes(() =>
         {
-            var scriptsDestination = RootDirectory / "resources" / "scripts" / "era-mymodule";
+            var scriptsDestination = RootDirectory / "resources" / "scripts" / "era-lanaguagetroubleshooter";
             EnsureCleanDirectory(scriptsDestination);
-            CopyDirectoryRecursively(RootDirectory / "module.web" / "dist" / "era-mymodule", scriptsDestination, DirectoryExistsPolicy.Merge);
+            CopyDirectoryRecursively(RootDirectory / "module.web" / "dist" / "era-lanaguagetroubleshooter", scriptsDestination, DirectoryExistsPolicy.Merge);
         });
 
     Target InstallNpmPackages => _ => _
@@ -389,7 +351,6 @@ class Build : NukeBuild
     Target Deploy => _ => _
         .DependsOn(DeployBinaries)
         .DependsOn(SetRelativeScripts)
-        .DependsOn(Test)
         .Executes(() =>
         {
 
@@ -440,7 +401,6 @@ class Build : NukeBuild
         .DependsOn(Clean)
         .DependsOn(SetManifestVersions)
         .DependsOn(Compile)
-        .DependsOn(Test)
         .DependsOn(SetRelativeScripts)
         .DependsOn(GenerateAppConfig)
         .DependsOn(SetBranch)
