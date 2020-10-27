@@ -1,8 +1,6 @@
 ﻿namespace Eraware.Modules.LanaguageTroubleshooter
 {
     using DotNetNuke.DependencyInjection;
-    using Eraware.Modules.LanaguageTroubleshooter.Data;
-    using Eraware.Modules.LanaguageTroubleshooter.Data.Repositories;
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
@@ -16,8 +14,6 @@
         /// <param name="services">The services collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<ModuleDbContext, ModuleDbContext>();
-            services.AddTransient<IItemRepository, ItemRepository>();
         }
     }
 }

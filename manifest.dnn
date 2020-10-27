@@ -1,4 +1,4 @@
-﻿<dotnetnuke version="5.0" type="Package">
+<dotnetnuke version="5.0" type="Package">
   <packages>
     <package name="Eraware_LanaguageTroubleshooter" type="Module" version="00.01.00">
       <friendlyName>Language Troubleshooter</friendlyName>
