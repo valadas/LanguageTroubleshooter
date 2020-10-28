@@ -1,6 +1,6 @@
 <dotnetnuke version="5.0" type="Package">
   <packages>
-    <package name="Eraware_LanaguageTroubleshooter" type="Module" version="00.01.00">
+    <package name="Eraware_LanaguageTroubleshooter" type="Module" version="00.02.00">
       <friendlyName>Language Troubleshooter</friendlyName>
       <description>Language Troubleshooter</description>
       <iconFile>~/DesktopModules/LanguageTroubleshooter/resources/images/module-icon.png</iconFile>
