@@ -12,7 +12,7 @@ updates:
   - package-ecosystem: "nuget"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "monthly"
     ignore:
       - dependency-name: "Microsoft.AspNet.WebApi.Client"
       - dependency-name: "Microsoft.AspNet.WebApi.Core"
