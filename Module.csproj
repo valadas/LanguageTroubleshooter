@@ -80,7 +80,7 @@
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="DotNetNuke.Web">
-      <Version>9.6.2</Version>
+      <Version>9.10.1</Version>
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="DotNetNuke.WebApi">
